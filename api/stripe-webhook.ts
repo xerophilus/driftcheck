@@ -5,6 +5,18 @@ const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET || "";
 const LICENSE_PRIVATE_KEY = process.env.LICENSE_PRIVATE_KEY || "";
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 
+export const config = { api: { bodyParser: false } };
+
+async function readRawBody(req: VercelRequest): Promise<string> {
+  if (typeof req.body === "string") return req.body;
+  if (Buffer.isBuffer(req.body)) return req.body.toString("utf8");
+  const chunks: Buffer[] = [];
+  for await (const chunk of req as any) {
+    chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
+  }
+  return Buffer.concat(chunks).toString("utf8");
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
@@ -15,8 +27,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(400).json({ error: "No signature" });
   }
 
-  const rawBody =
-    typeof req.body === "string" ? req.body : JSON.stringify(req.body);
+  const rawBody = await readRawBody(req);
 
   if (!verifyStripeSignature(rawBody, signature, STRIPE_WEBHOOK_SECRET)) {
     return res.status(401).json({ error: "Invalid signature" });
@@ -60,7 +71,8 @@ function verifyStripeSignature(
     ?.split("=")[1];
   const sig = parts.find((p) => p.startsWith("v1="))?.split("=")[1];
 
-  if (!timestamp || !sig) return false;
+  if (!timestamp || !sig || !secret) return false;
+  if (Math.abs(Date.now() / 1000 - Number(timestamp)) > 300) return false;
 
   const signedPayload = `${timestamp}.${payload}`;
   const expectedSig = crypto
@@ -68,7 +80,9 @@ function verifyStripeSignature(
     .update(signedPayload)
     .digest("hex");
 
-  return crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expectedSig));
+  const a = Buffer.from(sig);
+  const b = Buffer.from(expectedSig);
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
 }
 
 function signLicenseKey(email: string, privateKeyHex: string): string {
