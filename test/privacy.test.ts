@@ -12,7 +12,7 @@ const SENTINEL_KEY = "DATABASE_PASSWORD";
 
 describe("Privacy Test - Values Never Exposed", () => {
   it("should never expose secret values in any output", () => {
-    const testDir = fs.mkdtempSync(path.join(os.tmpdir(), "driftcheck-test-"));
+    const testDir = fs.mkdtempSync(path.join(os.tmpdir(), "deploydrift-test-"));
 
     fs.writeFileSync(
       path.join(testDir, ".env"),
@@ -55,7 +55,7 @@ describe("Privacy Test - Values Never Exposed", () => {
 
 describe("Env File Scanner", () => {
   it("should extract only keys from .env files", () => {
-    const testDir = fs.mkdtempSync(path.join(os.tmpdir(), "driftcheck-test-"));
+    const testDir = fs.mkdtempSync(path.join(os.tmpdir(), "deploydrift-test-"));
 
     fs.writeFileSync(
       path.join(testDir, ".env"),
@@ -74,7 +74,7 @@ describe("Env File Scanner", () => {
   });
 
   it("should scan .env.example files", () => {
-    const testDir = fs.mkdtempSync(path.join(os.tmpdir(), "driftcheck-test-"));
+    const testDir = fs.mkdtempSync(path.join(os.tmpdir(), "deploydrift-test-"));
 
     fs.writeFileSync(path.join(testDir, ".env.example"), "PORT=\nHOST=\n");
 
@@ -91,7 +91,7 @@ describe("Env File Scanner", () => {
 
 describe("Code Scanner", () => {
   it("should find process.env references", () => {
-    const testDir = fs.mkdtempSync(path.join(os.tmpdir(), "driftcheck-test-"));
+    const testDir = fs.mkdtempSync(path.join(os.tmpdir(), "deploydrift-test-"));
 
     fs.writeFileSync(
       path.join(testDir, "app.ts"),
@@ -115,7 +115,7 @@ describe("Code Scanner", () => {
   });
 
   it("should detect dynamic access", () => {
-    const testDir = fs.mkdtempSync(path.join(os.tmpdir(), "driftcheck-test-"));
+    const testDir = fs.mkdtempSync(path.join(os.tmpdir(), "deploydrift-test-"));
 
     fs.writeFileSync(
       path.join(testDir, "dynamic.ts"),
@@ -133,7 +133,7 @@ describe("Code Scanner", () => {
 
 describe("Checks", () => {
   it("should detect missing-in-example", () => {
-    const testDir = fs.mkdtempSync(path.join(os.tmpdir(), "driftcheck-test-"));
+    const testDir = fs.mkdtempSync(path.join(os.tmpdir(), "deploydrift-test-"));
 
     fs.writeFileSync(
       path.join(testDir, ".env"),
@@ -169,7 +169,7 @@ describe("Checks", () => {
   });
 
   it("should detect public leak risks", () => {
-    const testDir = fs.mkdtempSync(path.join(os.tmpdir(), "driftcheck-test-"));
+    const testDir = fs.mkdtempSync(path.join(os.tmpdir(), "deploydrift-test-"));
 
     fs.writeFileSync(
       path.join(testDir, "app.ts"),

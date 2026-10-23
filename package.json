@@ -1,10 +1,10 @@
 {
-  "name": "driftcheck",
+  "name": "deploydrift",
   "version": "1.0.0",
   "description": "Catch env/config drift between code, .env files, CI, and live hosting providers before deploy breaks",
   "type": "module",
   "bin": {
-    "driftcheck": "./dist/cli.js"
+    "deploydrift": "./dist/cli.js"
   },
   "files": [
     "dist"

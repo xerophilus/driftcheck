@@ -15,7 +15,7 @@ const { publicKey, privateKey } = crypto.generateKeyPairSync("ed25519", {
 const publicKeyHex = publicKey.toString("hex");
 const privateKeyHex = privateKey.toString("hex");
 
-console.log("Generated Ed25519 keypair for driftcheck license signing\n");
+console.log("Generated Ed25519 keypair for deploydrift license signing\n");
 console.log("=== PUBLIC KEY (embed in src/license.ts) ===");
 console.log(publicKeyHex);
 console.log("\n=== PRIVATE KEY (set as VERCEL env var LICENSE_PRIVATE_KEY) ===");
