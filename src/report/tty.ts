@@ -5,7 +5,7 @@ export function renderTTY(result: CheckResult, graph: KeyGraph, projectName: str
   const lines: string[] = [];
 
   lines.push(
-    `${pc.bold("deploydrift")} v1.0.0 · project: ${projectName} · ${pc.green("values are never read ✔")}`
+    `${pc.bold("deploydrift")} v1.0.1 · project: ${projectName} · ${pc.green("values are never read ✔")}`
   );
 
   const sources: string[] = [];

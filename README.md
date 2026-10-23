@@ -29,7 +29,7 @@ That's it. No config required for basic checks.
 ## Example Output
 
 ```
-deploydrift v1.0.0 · project: acme-web · values are never read ✔
+deploydrift v1.0.1 · project: acme-web · values are never read ✔
 Sources: code(142 files) .env .env.example docker-compose.yml
          .github/workflows(2) vercel[production] github-secrets
 

@@ -1,6 +1,6 @@
 {
   "name": "deploydrift",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Catch env/config drift between code, .env files, CI, and live hosting providers before deploy breaks",
   "type": "module",
   "bin": {
