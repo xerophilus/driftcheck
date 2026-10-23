@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>driftcheck - Catch env drift before deploy breaks</title>
+    <meta
+      name="description"
+      content="Catch env/config drift between code, .env files, CI, and live hosting providers before deploy breaks. $29 lifetime license."
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        line-height: 1.6;
+        color: #1a1a1a;
+        background: #ffffff;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      header {
+        padding: 60px 0 40px;
+        text-align: center;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: #000;
+      }
+
+      h2 {
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin: 60px 0 20px;
+        color: #000;
+      }
+
+      h3 {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin: 30px 0 15px;
+        color: #333;
+      }
+
+      .subtitle {
+        font-size: 1.3rem;
+        color: #555;
+        margin-bottom: 30px;
+      }
+
+      .install-box {
+        background: #f5f5f5;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 20px;
+        margin: 30px 0;
+        font-family: "Courier New", monospace;
+        font-size: 1.1rem;
+        text-align: center;
+      }
+
+      .privacy-box {
+        background: #f0f9ff;
+        border: 2px solid #0ea5e9;
+        border-radius: 6px;
+        padding: 20px;
+        margin: 40px 0;
+      }
+
+      .privacy-box strong {
+        color: #0284c7;
+        font-size: 1.1rem;
+      }
+
+      .pain-stories {
+        margin: 40px 0;
+      }
+
+      .pain-story {
+        background: #fef2f2;
+        border-left: 4px solid #dc2626;
+        padding: 15px 20px;
+        margin: 15px 0;
+      }
+
+      .pain-story strong {
+        color: #991b1b;
+      }
+
+      .sources {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin: 20px 0;
+      }
+
+      .source {
+        background: #f5f5f5;
+        border: 1px solid #ddd;
+        padding: 10px 20px;
+        border-radius: 4px;
+        font-weight: 500;
+      }
+
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 30px 0;
+      }
+
+      .comparison-table th,
+      .comparison-table td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+      }
+
+      .comparison-table th {
+        background: #f5f5f5;
+        font-weight: 600;
+      }
+
+      .comparison-table .check {
+        color: #16a34a;
+        font-weight: bold;
+      }
+
+      .comparison-table .cross {
+        color: #dc2626;
+        font-weight: bold;
+      }
+
+      .pricing {
+        background: #f9fafb;
+        border: 2px solid #000;
+        border-radius: 8px;
+        padding: 40px;
+        margin: 40px 0;
+        text-align: center;
+      }
+
+      .pricing-options {
+        display: flex;
+        gap: 30px;
+        justify-content: center;
+        margin-top: 30px;
+      }
+
+      .pricing-card {
+        background: white;
+        border: 2px solid #ddd;
+        border-radius: 6px;
+        padding: 30px;
+        flex: 1;
+        max-width: 300px;
+      }
+
+      .pricing-card.featured {
+        border-color: #000;
+        position: relative;
+      }
+
+      .price {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin: 20px 0;
+      }
+
+      .buy-button {
+        display: inline-block;
+        background: #000;
+        color: #fff;
+        padding: 15px 40px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin-top: 20px;
+        transition: background 0.2s;
+      }
+
+      .buy-button:hover {
+        background: #333;
+      }
+
+      .ci-snippet {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 20px;
+        border-radius: 6px;
+        margin: 20px 0;
+        overflow-x: auto;
+      }
+
+      .ci-snippet code {
+        font-family: "Courier New", monospace;
+        font-size: 0.95rem;
+      }
+
+      .faq {
+        margin: 40px 0;
+      }
+
+      .faq-item {
+        margin: 25px 0;
+      }
+
+      .faq-item strong {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 1.1rem;
+      }
+
+      footer {
+        text-align: center;
+        padding: 40px 0;
+        color: #666;
+        border-top: 1px solid #eee;
+        margin-top: 60px;
+      }
+
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 2rem;
+        }
+
+        .pricing-options {
+          flex-direction: column;
+          align-items: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>driftcheck</h1>
+        <p class="subtitle">
+          Your deploy is missing an env var.<br />Find out before prod does.
+        </p>
+        <div class="install-box">npx driftcheck</div>
+      </header>
+
+      <section class="pain-stories">
+        <h2>Real Production Failures</h2>
+
+        <div class="pain-story">
+          <strong>500 on deploy:</strong> Added STRIPE_WEBHOOK_SECRET to .env,
+          forgot to set it in Vercel production. Customers saw errors for 2
+          hours.
+        </div>
+
+        <div class="pain-story">
+          <strong>Preview works, prod broken:</strong> DATABASE_URL set in
+          Vercel preview environment but missing from production. Deploy passed,
+          users got a white screen.
+        </div>
+
+        <div class="pain-story">
+          <strong>CI failing mysteriously:</strong> GitHub Actions secret
+          renamed from SENTRY_TOKEN to SENTRY_AUTH_TOKEN. Workflow still
+          referenced the old name. Deploys blocked for a day.
+        </div>
+      </section>
+
+      <section>
+        <h2>What driftcheck checks</h2>
+        <div class="sources">
+          <div class="source">Code (JS/TS/Python/Go)</div>
+          <div class="source">.env files</div>
+          <div class="source">.env.example</div>
+          <div class="source">docker-compose.yml</div>
+          <div class="source">GitHub Actions</div>
+          <div class="source">Vercel (live)</div>
+          <div class="source">Netlify (live)</div>
+          <div class="source">GitHub secrets</div>
+        </div>
+      </section>
+
+      <div class="privacy-box">
+        <strong>Privacy guarantee:</strong> driftcheck never reads, stores,
+        prints, or transmits secret values. It only compares variable names.
+        Provider APIs are called with list-names endpoints only. No telemetry.
+      </div>
+
+      <section>
+        <h2>How it compares</h2>
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Tool</th>
+              <th>Code scan</th>
+              <th>.env files</th>
+              <th>Live providers</th>
+              <th>CI checks</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>driftcheck</strong></td>
+              <td class="check">✓</td>
+              <td class="check">✓</td>
+              <td class="check">✓</td>
+              <td class="check">✓</td>
+            </tr>
+            <tr>
+              <td>dotenv-linter</td>
+              <td class="cross">✗</td>
+              <td class="check">✓</td>
+              <td class="cross">✗</td>
+              <td class="cross">✗</td>
+            </tr>
+            <tr>
+              <td>envcheck</td>
+              <td class="check">✓</td>
+              <td class="check">✓</td>
+              <td class="cross">✗</td>
+              <td class="check">✓</td>
+            </tr>
+            <tr>
+              <td>Doppler</td>
+              <td class="cross">✗</td>
+              <td class="cross">✗</td>
+              <td class="check">✓</td>
+              <td class="cross">Requires migration</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>Use in CI</h2>
+        <div class="ci-snippet">
+          <code>
+- name: Check env drift<br />
+  run: npx driftcheck --ci<br />
+  env:<br />
+    VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}<br />
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}<br />
+    DRIFTCHECK_LICENSE: ${{ secrets.DRIFTCHECK_LICENSE }}
+          </code>
+        </div>
+      </section>
+
+      <section class="pricing">
+        <h2>Pricing</h2>
+        <div class="pricing-options">
+          <div class="pricing-card">
+            <h3>Free</h3>
+            <div class="price">$0</div>
+            <p>1 project</p>
+            <p>All features</p>
+            <p>No time limit</p>
+          </div>
+          <div class="pricing-card featured">
+            <h3>Lifetime</h3>
+            <div class="price">$29</div>
+            <p>Unlimited projects</p>
+            <p>All features</p>
+            <p>All future v1.x updates</p>
+            <a href="/buy" class="buy-button">Buy Now</a>
+          </div>
+        </div>
+        <p style="margin-top: 30px; color: #666">
+          No subscription. No accounts. No SaaS.
+        </p>
+      </section>
+
+      <section class="faq">
+        <h2>FAQ</h2>
+
+        <div class="faq-item">
+          <strong>How does the license work?</strong>
+          <p>
+            Offline license keys. No phone-home. Works in CI with
+            DRIFTCHECK_LICENSE env var. Keys are signed, delivered via email on
+            purchase.
+          </p>
+        </div>
+
+        <div class="faq-item">
+          <strong>What frameworks are supported?</strong>
+          <p>
+            Any Node/TypeScript project. Works with Next.js, Vite, Express,
+            Remix, etc. Also scans Python and Go code for env vars.
+          </p>
+        </div>
+
+        <div class="faq-item">
+          <strong>Do I need to connect my providers?</strong>
+          <p>
+            No. The tool works without provider access (static checks only). For
+            live provider checks, supply tokens via env vars. Your tokens never
+            leave your machine.
+          </p>
+        </div>
+
+        <div class="faq-item">
+          <strong>Refund policy?</strong>
+          <p>14-day money-back guarantee, no questions asked. Contact via GitHub issues.</p>
+        </div>
+
+        <div class="faq-item">
+          <strong>What about v2, v3, etc?</strong>
+          <p>
+            The $29 license covers all v1.x updates (bug fixes, new providers,
+            new checks). Major versions (v2+) would require a separate purchase,
+            but v1 will be supported long-term.
+          </p>
+        </div>
+      </section>
+
+      <footer>
+        <p>&copy; 2026 driftcheck. Privacy-first environment drift detection.</p>
+        <p style="margin-top: 10px">
+          <a href="https://github.com/xerophilus/driftcheck" style="color: #666">GitHub</a> ·
+          <a href="https://github.com/xerophilus/driftcheck#readme" style="color: #666">Documentation</a>
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>
