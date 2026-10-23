@@ -1,5 +1,12 @@
 {
   "version": 2,
+  "redirects": [
+    {
+      "source": "/buy",
+      "destination": "https://buy.stripe.com/3cI28rbjGdAUfBy8h87wA01",
+      "permanent": false
+    }
+  ],
   "rewrites": [
     {
       "source": "/",

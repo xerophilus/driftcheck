@@ -54,7 +54,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       await sendLicenseEmail(email, licenseKey, RESEND_API_KEY);
     }
 
-    return res.status(200).json({ received: true, key: licenseKey });
+    return res.status(200).json({ received: true });
   }
 
   return res.status(200).json({ received: true });
