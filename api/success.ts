@@ -25,6 +25,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     const session = await response.json();
+    if (session.payment_status !== "paid") return res.status(402).send("Payment not completed");
     const email = session.customer_details?.email;
 
     if (!email) {

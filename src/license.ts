@@ -5,7 +5,7 @@ import * as os from "os";
 import type { License } from "./types.js";
 
 const PUBLIC_KEY_HEX =
-  "e5564300c360ac729086e2cc806e828a84877f1eb8e5d974d873e06522490155";
+  "302a300506032b6570032100ce5ea8d2ca25f7d43a2afe1292689c878b23ca5b6645458ba0f8d6f4eefc82f6";
 
 export function validateLicense(key: string): License | null {
   if (!key.startsWith("DC1-")) return null;
