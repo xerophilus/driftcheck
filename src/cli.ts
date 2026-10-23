@@ -31,7 +31,7 @@ async function main() {
   }
 
   if (args.includes("--version") || args.includes("-v")) {
-    console.log("deploydrift v1.0.0");
+    console.log("deploydrift v1.0.1");
     process.exit(0);
   }
 
@@ -263,7 +263,7 @@ async function fixExample(rootDir: string) {
 }
 
 function printHelp() {
-  console.log(`deploydrift v1.0.0
+  console.log(`deploydrift v1.0.1
 
 Usage:
   deploydrift                     Run checks
