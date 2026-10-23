@@ -65,7 +65,7 @@ async function main() {
       );
     } else {
       console.log("No license activated. Running in free tier (1 project).");
-      console.log("Unlock unlimited for $29 lifetime → https://driftcheck.dev/buy");
+      console.log("Unlock unlimited projects for $29 lifetime.");
     }
     process.exit(0);
   }

@@ -55,6 +55,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
               text-align: left;
             }
             .key { font-weight: bold; color: #2563eb; }
+            .note { margin-top: 20px; color: #666; font-size: 0.9rem; }
           </style>
         </head>
         <body>
@@ -63,7 +64,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           <pre class="key">${licenseKey}</pre>
           <p>Activate it by running:</p>
           <pre>driftcheck activate ${licenseKey}</pre>
-          <p>You'll also receive this via email.</p>
+          <p class="note">This key has also been sent to your email (if configured).</p>
           <p><a href="/">Back to Home</a></p>
         </body>
       </html>
@@ -75,7 +76,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
 function generateKeyFromSession(session: any): string {
   const email = session.customer_details?.email || "";
-  const privateKey = process.env.LICENSE_PRIVATE_KEY || "demo_key";
+  const privateKeyHex = process.env.LICENSE_PRIVATE_KEY || "";
 
   const emailHash = crypto.createHash("sha256").update(email).digest("hex");
 
@@ -87,12 +88,23 @@ function generateKeyFromSession(session: any): string {
   };
 
   const payloadJson = JSON.stringify(license);
-  const payloadB64 = Buffer.from(payloadJson).toString("base64url");
+  const payloadBuffer = Buffer.from(payloadJson);
+  const payloadB64 = payloadBuffer.toString("base64url");
 
-  const signature = crypto
-    .createHash("sha256")
-    .update(payloadB64 + privateKey)
-    .digest("base64url");
+  const privateKeyBuffer = Buffer.from(privateKeyHex, "hex");
 
-  return `DC1-${payloadB64}.${signature}`;
+  const privateKey = crypto.createPrivateKey({
+    key: privateKeyBuffer,
+    format: "der",
+    type: "pkcs8",
+  });
+
+  const signature = crypto.sign(null, payloadBuffer, {
+    key: privateKey,
+    dsaEncoding: "ieee-p1363",
+  });
+
+  const signatureB64 = signature.toString("base64url");
+
+  return `DC1-${payloadB64}.${signatureB64}`;
 }

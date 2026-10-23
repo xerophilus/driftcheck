@@ -2,9 +2,8 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import crypto from "crypto";
 
 const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET || "";
-const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || "";
 const LICENSE_PRIVATE_KEY = process.env.LICENSE_PRIVATE_KEY || "";
-const RESEND_API_KEY = process.env.RESEND_API_KEY || "";
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") {
@@ -40,7 +39,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const licenseKey = signLicenseKey(email, LICENSE_PRIVATE_KEY);
 
-    await sendLicenseEmail(email, licenseKey);
+    if (RESEND_API_KEY) {
+      await sendLicenseEmail(email, licenseKey, RESEND_API_KEY);
+    }
 
     return res.status(200).json({ received: true, key: licenseKey });
   }
@@ -70,7 +71,7 @@ function verifyStripeSignature(
   return crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expectedSig));
 }
 
-function signLicenseKey(email: string, privateKey: string): string {
+function signLicenseKey(email: string, privateKeyHex: string): string {
   const emailHash = crypto.createHash("sha256").update(email).digest("hex");
 
   const license = {
@@ -81,24 +82,37 @@ function signLicenseKey(email: string, privateKey: string): string {
   };
 
   const payloadJson = JSON.stringify(license);
-  const payloadB64 = Buffer.from(payloadJson).toString("base64url");
+  const payloadBuffer = Buffer.from(payloadJson);
+  const payloadB64 = payloadBuffer.toString("base64url");
 
-  const signature = crypto
-    .createHash("sha256")
-    .update(payloadB64 + privateKey)
-    .digest("base64url");
+  const privateKeyBuffer = Buffer.from(privateKeyHex, "hex");
 
-  return `DC1-${payloadB64}.${signature}`;
+  const privateKey = crypto.createPrivateKey({
+    key: privateKeyBuffer,
+    format: "der",
+    type: "pkcs8",
+  });
+
+  const signature = crypto.sign(null, payloadBuffer, {
+    key: privateKey,
+    dsaEncoding: "ieee-p1363",
+  });
+
+  const signatureB64 = signature.toString("base64url");
+
+  return `DC1-${payloadB64}.${signatureB64}`;
 }
 
-async function sendLicenseEmail(email: string, key: string) {
-  if (!RESEND_API_KEY) return;
-
+async function sendLicenseEmail(
+  email: string,
+  key: string,
+  resendApiKey: string
+) {
   try {
     await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${RESEND_API_KEY}`,
+        Authorization: `Bearer ${resendApiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -117,6 +131,6 @@ async function sendLicenseEmail(email: string, key: string) {
       }),
     });
   } catch {
-    // Silent fail
+    // Silent fail - key is shown on success page
   }
 }

@@ -142,7 +142,7 @@ Auto-detection works without config:
 
 No subscription. No accounts. No SaaS.
 
-Purchase: [driftcheck.dev/buy](https://driftcheck.dev/buy)
+Purchase at `/buy` when deployed (Stripe integration required).
 
 ### License Activation
 
@@ -177,12 +177,26 @@ driftcheck is the only tool that diffs code usage, local files, CI config, and l
 ## Development
 
 ```bash
-git clone https://github.com/yourusername/driftcheck.git
+git clone https://github.com/xerophilus/driftcheck.git
 cd driftcheck
 npm install
 npm run build
 npm test
 ```
+
+### Generate License Keypair
+
+For deployment, generate an Ed25519 keypair for signing license keys:
+
+```bash
+npm run keygen
+```
+
+This outputs:
+- **Public key** (hex) - embed in `src/license.ts` (already set to a default)
+- **Private key** (hex) - set as `LICENSE_PRIVATE_KEY` environment variable in Vercel
+
+The public key ships with the CLI for offline validation. The private key is used server-side to sign new licenses.
 
 ## Privacy & Security
 
@@ -200,8 +214,8 @@ MIT License - see LICENSE file
 
 ## Support
 
-- Issues: [github.com/yourusername/driftcheck/issues](https://github.com/yourusername/driftcheck/issues)
-- Email: support@driftcheck.dev
+- Issues: [github.com/xerophilus/driftcheck/issues](https://github.com/xerophilus/driftcheck/issues)
+- Repository: [github.com/xerophilus/driftcheck](https://github.com/xerophilus/driftcheck)
 
 ---
 

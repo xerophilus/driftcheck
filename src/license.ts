@@ -4,8 +4,8 @@ import * as path from "path";
 import * as os from "os";
 import type { License } from "./types.js";
 
-const PUBLIC_KEY =
-  "driftcheck_public_key_v1_will_be_generated_and_embedded_here";
+const PUBLIC_KEY_HEX =
+  "e5564300c360ac729086e2cc806e828a84877f1eb8e5d974d873e06522490155";
 
 export function validateLicense(key: string): License | null {
   if (!key.startsWith("DC1-")) return null;
@@ -14,7 +14,27 @@ export function validateLicense(key: string): License | null {
     const [payloadB64, sigB64] = key.slice(4).split(".");
     if (!payloadB64 || !sigB64) return null;
 
-    const payload = Buffer.from(payloadB64, "base64url").toString("utf-8");
+    const payloadBuffer = Buffer.from(payloadB64, "base64url");
+    const signatureBuffer = Buffer.from(sigB64, "base64url");
+    const publicKeyBuffer = Buffer.from(PUBLIC_KEY_HEX, "hex");
+
+    const isValid = crypto.verify(
+      null,
+      payloadBuffer,
+      {
+        key: crypto.createPublicKey({
+          key: publicKeyBuffer,
+          format: "der",
+          type: "spki",
+        }),
+        dsaEncoding: "ieee-p1363",
+      },
+      signatureBuffer
+    );
+
+    if (!isValid) return null;
+
+    const payload = payloadBuffer.toString("utf-8");
     const license: License = JSON.parse(payload);
 
     if (!license.email_hash || !license.purchased_at || !license.plan) {
@@ -133,14 +153,24 @@ export function signLicense(
   };
 
   const payloadJson = JSON.stringify(license);
-  const payloadB64 = Buffer.from(payloadJson).toString("base64url");
+  const payloadBuffer = Buffer.from(payloadJson);
+  const payloadB64 = payloadBuffer.toString("base64url");
 
-  const signature = crypto
-    .createHash("sha256")
-    .update(payloadB64 + privateKeyHex)
-    .digest("base64url");
+  const privateKeyBuffer = Buffer.from(privateKeyHex, "hex");
 
-  const key = `DC1-${payloadB64}.${signature}`;
+  const privateKey = crypto.createPrivateKey({
+    key: privateKeyBuffer,
+    format: "der",
+    type: "pkcs8",
+  });
+
+  const signature = crypto.sign(null, payloadBuffer, {
+    key: privateKey,
+    dsaEncoding: "ieee-p1363",
+  });
+
+  const signatureB64 = signature.toString("base64url");
+  const key = `DC1-${payloadB64}.${signatureB64}`;
 
   return { key, license };
 }
