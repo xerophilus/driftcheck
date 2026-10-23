@@ -38,7 +38,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       <!DOCTYPE html>
       <html>
         <head>
-          <title>Purchase Complete - driftcheck</title>
+          <title>Purchase Complete - deploydrift</title>
           <style>
             body {
               font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -64,7 +64,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           <p>Your lifetime license key:</p>
           <pre class="key">${licenseKey}</pre>
           <p>Activate it by running:</p>
-          <pre>driftcheck activate ${licenseKey}</pre>
+          <pre>deploydrift activate ${licenseKey}</pre>
           <p class="note">This key has also been sent to your email (if configured).</p>
           <p><a href="/">Back to Home</a></p>
         </body>

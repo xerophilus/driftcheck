@@ -31,7 +31,7 @@ async function main() {
   }
 
   if (args.includes("--version") || args.includes("-v")) {
-    console.log("driftcheck v1.0.0");
+    console.log("deploydrift v1.0.0");
     process.exit(0);
   }
 
@@ -43,7 +43,7 @@ async function main() {
   if (args[0] === "activate") {
     const key = args[1];
     if (!key) {
-      console.error("Usage: driftcheck activate <license-key>");
+      console.error("Usage: deploydrift activate <license-key>");
       process.exit(1);
     }
 
@@ -171,8 +171,9 @@ async function main() {
 }
 
 function loadConfig(rootDir: string): Config {
-  const configPath = path.join(rootDir, "driftcheck.config.json");
-  const content = readFileIfExists(configPath);
+  const content =
+    readFileIfExists(path.join(rootDir, "deploydrift.config.json")) ||
+    readFileIfExists(path.join(rootDir, "driftcheck.config.json"));
 
   if (content) {
     try {
@@ -201,10 +202,10 @@ function getProjectName(rootDir: string): string {
 }
 
 async function initConfig(rootDir: string) {
-  const configPath = path.join(rootDir, "driftcheck.config.json");
+  const configPath = path.join(rootDir, "deploydrift.config.json");
 
-  if (fs.existsSync(configPath)) {
-    console.log("driftcheck.config.json already exists");
+  if (fs.existsSync(configPath) || fs.existsSync(path.join(rootDir, "driftcheck.config.json"))) {
+    console.log("Config file already exists (deploydrift.config.json or driftcheck.config.json)");
     return;
   }
 
@@ -215,12 +216,12 @@ async function initConfig(rootDir: string) {
   };
 
   fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
-  console.log("✓ Created driftcheck.config.json");
+  console.log("✓ Created deploydrift.config.json");
 
   console.log("\nAdd this to your CI workflow:");
   console.log(`
 - name: Check env drift
-  run: npx driftcheck --ci
+  run: npx deploydrift --ci
 `);
 }
 
@@ -262,19 +263,19 @@ async function fixExample(rootDir: string) {
 }
 
 function printHelp() {
-  console.log(`driftcheck v1.0.0
+  console.log(`deploydrift v1.0.0
 
 Usage:
-  driftcheck                     Run checks
-  driftcheck --json              Output JSON
-  driftcheck --ci                CI mode (strict, no color)
-  driftcheck --only vercel,code  Check specific sources
-  driftcheck init                Create config file
-  driftcheck fix-example         Update .env.example
-  driftcheck activate <key>      Activate license
-  driftcheck license             Show license info
-  driftcheck --privacy           Show privacy policy
-  driftcheck --help              Show this help
+  deploydrift                     Run checks
+  deploydrift --json              Output JSON
+  deploydrift --ci                CI mode (strict, no color)
+  deploydrift --only vercel,code  Check specific sources
+  deploydrift init                Create config file
+  deploydrift fix-example         Update .env.example
+  deploydrift activate <key>      Activate license
+  deploydrift license             Show license info
+  deploydrift --privacy           Show privacy policy
+  deploydrift --help              Show this help
 
 Options:
   --json       Output JSON
@@ -292,9 +293,9 @@ Environment variables:
 }
 
 function printPrivacy() {
-  console.log(`driftcheck Privacy Policy
+  console.log(`deploydrift Privacy Policy
 
-driftcheck never reads, stores, prints, or transmits secret VALUES.
+deploydrift never reads, stores, prints, or transmits secret VALUES.
 
 It only compares variable NAMES (and, optionally, a local salted SHA-256
 fingerprint of a value to detect "same vs different" across local files —

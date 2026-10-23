@@ -130,15 +130,15 @@ async function sendLicenseEmail(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "driftcheck <noreply@driftcheck.dev>",
+        from: "deploydrift <noreply@driftcheck.dev>",
         to: email,
-        subject: "Your driftcheck License Key",
+        subject: "Your deploydrift License Key",
         html: `
-          <h1>Thanks for purchasing driftcheck!</h1>
+          <h1>Thanks for purchasing deploydrift!</h1>
           <p>Your lifetime license key:</p>
           <pre>${key}</pre>
           <p>Activate it by running:</p>
-          <pre>driftcheck activate ${key}</pre>
+          <pre>deploydrift activate ${key}</pre>
           <p>Or set it in your CI:</p>
           <pre>DRIFTCHECK_LICENSE=${key}</pre>
         `,

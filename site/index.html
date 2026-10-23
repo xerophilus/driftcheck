@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>driftcheck - Catch env drift before deploy breaks</title>
+    <title>deploydrift - Catch env drift before deploy breaks</title>
     <meta
       name="description"
       content="Catch env/config drift between code, .env files, CI, and live hosting providers before deploy breaks. $29 lifetime license."
@@ -247,11 +247,11 @@
   <body>
     <div class="container">
       <header>
-        <h1>driftcheck</h1>
+        <h1>deploydrift</h1>
         <p class="subtitle">
           Your deploy is missing an env var.<br />Find out before prod does.
         </p>
-        <div class="install-box">npx driftcheck</div>
+        <div class="install-box">npx deploydrift</div>
       </header>
 
       <section class="pain-stories">
@@ -277,7 +277,7 @@
       </section>
 
       <section>
-        <h2>What driftcheck checks</h2>
+        <h2>What deploydrift checks</h2>
         <div class="sources">
           <div class="source">Code (JS/TS/Python/Go)</div>
           <div class="source">.env files</div>
@@ -291,7 +291,7 @@
       </section>
 
       <div class="privacy-box">
-        <strong>Privacy guarantee:</strong> driftcheck never reads, stores,
+        <strong>Privacy guarantee:</strong> deploydrift never reads, stores,
         prints, or transmits secret values. It only compares variable names.
         Provider APIs are called with list-names endpoints only. No telemetry.
       </div>
@@ -310,7 +310,7 @@
           </thead>
           <tbody>
             <tr>
-              <td><strong>driftcheck</strong></td>
+              <td><strong>deploydrift</strong></td>
               <td class="check">✓</td>
               <td class="check">✓</td>
               <td class="check">✓</td>
@@ -346,7 +346,7 @@
         <div class="ci-snippet">
           <code>
 - name: Check env drift<br />
-  run: npx driftcheck --ci<br />
+  run: npx deploydrift --ci<br />
   env:<br />
     VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}<br />
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}<br />
@@ -424,7 +424,7 @@
       </section>
 
       <footer>
-        <p>&copy; 2026 driftcheck. Privacy-first environment drift detection.</p>
+        <p>&copy; 2026 deploydrift. Privacy-first environment drift detection.</p>
         <p style="margin-top: 10px">
           <a href="https://github.com/xerophilus/driftcheck" style="color: #666">GitHub</a> ·
           <a href="https://github.com/xerophilus/driftcheck#readme" style="color: #666">Documentation</a>

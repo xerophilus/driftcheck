@@ -1,10 +1,10 @@
-# driftcheck
+# deploydrift
 
 > Catch env/config drift between code, .env files, CI, and live hosting providers before deploy breaks.
 
 ## Privacy First
 
-**driftcheck never reads, stores, prints, or transmits secret values.**
+**deploydrift never reads, stores, prints, or transmits secret values.**
 
 It only compares variable **names** (and, optionally, a local salted SHA-256 fingerprint to detect "same vs different" across local files — computed in memory, never written or sent).
 
@@ -13,7 +13,7 @@ Provider APIs are called with list-names endpoints only. No telemetry. The only 
 ## Quick Start
 
 ```bash
-npx driftcheck
+npx deploydrift
 ```
 
 That's it. No config required for basic checks.
@@ -29,7 +29,7 @@ That's it. No config required for basic checks.
 ## Example Output
 
 ```
-driftcheck v1.0.0 · project: acme-web · values are never read ✔
+deploydrift v1.0.0 · project: acme-web · values are never read ✔
 Sources: code(142 files) .env .env.example docker-compose.yml
          .github/workflows(2) vercel[production] github-secrets
 
@@ -59,14 +59,14 @@ Sources: code(142 files) .env .env.example docker-compose.yml
 
 ## Provider Setup (Optional)
 
-driftcheck works without provider access. For live checks against Vercel, Netlify, or GitHub:
+deploydrift works without provider access. For live checks against Vercel, Netlify, or GitHub:
 
 ```bash
 export VERCEL_TOKEN="your_token"
 export NETLIFY_AUTH_TOKEN="your_token"
 export GITHUB_TOKEN="your_token"
 
-npx driftcheck
+npx deploydrift
 ```
 
 Tokens are **never logged or transmitted** except to the provider's API.
@@ -80,15 +80,15 @@ Tokens are **never logged or transmitted** except to the provider's API.
 ## Commands
 
 ```bash
-npx driftcheck                  # Run checks
-npx driftcheck --json           # Output JSON
-npx driftcheck --ci             # CI mode (strict, no color)
-npx driftcheck --only vercel,code  # Check specific sources
-npx driftcheck init             # Create config file
-npx driftcheck fix-example      # Update .env.example with missing keys
-npx driftcheck activate <key>   # Activate license
-npx driftcheck license          # Show license info
-npx driftcheck --privacy        # Show privacy policy
+npx deploydrift                  # Run checks
+npx deploydrift --json           # Output JSON
+npx deploydrift --ci             # CI mode (strict, no color)
+npx deploydrift --only vercel,code  # Check specific sources
+npx deploydrift init             # Create config file
+npx deploydrift fix-example      # Update .env.example with missing keys
+npx deploydrift activate <key>   # Activate license
+npx deploydrift license          # Show license info
+npx deploydrift --privacy        # Show privacy policy
 ```
 
 ## CI Setup
@@ -97,7 +97,7 @@ npx driftcheck --privacy        # Show privacy policy
 
 ```yaml
 - name: Check env drift
-  run: npx driftcheck --ci
+  run: npx deploydrift --ci
   env:
     VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -111,7 +111,7 @@ Exit codes:
 
 ## Configuration
 
-Create `driftcheck.config.json` (optional):
+Create `deploydrift.config.json` (optional; legacy `driftcheck.config.json` is also accepted):
 
 ```json
 {
@@ -147,7 +147,7 @@ Purchase at `/buy` when deployed (Stripe integration required).
 ### License Activation
 
 ```bash
-driftcheck activate DC1-your-license-key
+deploydrift activate DC1-your-license-key
 ```
 
 Or for CI:
@@ -162,12 +162,12 @@ License keys are **offline-validated**. No phone-home. Works in CI and air-gappe
 
 | Tool | Code scan | .env files | Live providers | CI checks |
 |------|-----------|------------|----------------|-----------|
-| **driftcheck** | ✓ | ✓ | ✓ | ✓ |
+| **deploydrift** | ✓ | ✓ | ✓ | ✓ |
 | dotenv-linter | ✗ | ✓ | ✗ | ✗ |
 | envcheck | ✓ | ✓ | ✗ | ✓ |
 | Doppler | ✗ | ✗ | ✓ | Requires migration |
 
-driftcheck is the only tool that diffs code usage, local files, CI config, and live provider state — all without touching secret values.
+deploydrift is the only tool that diffs code usage, local files, CI config, and live provider state — all without touching secret values.
 
 ## Requirements
 
@@ -206,7 +206,7 @@ The public key ships with the CLI for offline validation. The private key is use
 - **Offline license validation** — no phone-home
 - **Open source** — audit the code yourself
 
-See `driftcheck --privacy` for full policy.
+See `deploydrift --privacy` for full policy.
 
 ## License
 
