@@ -87,7 +87,7 @@ async function main() {
         "Free license covers 1 project. This is a different project."
       );
       console.error(
-        "Unlock unlimited for $29 lifetime → https://driftcheck.dev/buy"
+        "Unlock unlimited for $29 lifetime → https://deploydrift.pittsdev.com/buy"
       );
       process.exit(1);
     }

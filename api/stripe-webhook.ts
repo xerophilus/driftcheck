@@ -4,6 +4,7 @@ import crypto from "crypto";
 const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET || "";
 const LICENSE_PRIVATE_KEY = process.env.LICENSE_PRIVATE_KEY || "";
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
+const FROM_EMAIL = process.env.FROM_EMAIL || "deploydrift <noreply@pittsdev.com>";
 
 export const config = { api: { bodyParser: false } };
 
@@ -130,7 +131,7 @@ async function sendLicenseEmail(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "deploydrift <noreply@driftcheck.dev>",
+        from: FROM_EMAIL,
         to: email,
         subject: "Your deploydrift License Key",
         html: `
